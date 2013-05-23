@@ -278,7 +278,7 @@ function equal_line
 #   Usage:
 #       replace_config config key value
 #   Function:
-#       Replace "^${key}=.*" to "${key}=\"${value}\"" in config file.
+#       Replace "^${key}=.*" to "${key}=${value}" in config file.
 function replace_config
 {
     if [ "$#" -lt 3 ]
@@ -289,9 +289,12 @@ function replace_config
     local config="${1}"
     local key="${2}"
     local value="${3}"
+    #   escape replace in value for sed
+    value="$(echo '${value}' | sed 's/\\/\\\\/g')"
+    value="$(echo '${value}' | sed 's/\//\\\//g')"
     #   replace
     #   TODO: support escape replace
-    safe_execute "sed -i 's/^${key}=.*/${key}=\"${value}\"/g' '${config}'"
+    safe_execute "sed -i 's/^${key}=.*/${key}=${value}/g' '${config}'"
     return 0
 }
 
