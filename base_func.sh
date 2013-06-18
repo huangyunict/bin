@@ -12,10 +12,6 @@ set -o nounset  # avoid uninitialized variables
 set -o errexit  # exit when statement returns false
 set -o pipefail # pipe fail
 
-#   constant 
-tab="	"
-endl="\n"
-
 #   Usage:
 #       safe_let expr_str
 #   Function:
