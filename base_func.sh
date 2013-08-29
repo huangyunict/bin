@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#   verbose
-set +o nounset # temporary do not check uninitialized variables
-if ! [ -n "${SAFE_EXECUTE_VERBOSE}" ]
-then
-    export SAFE_EXECUTE_VERBOSE="0"
-fi
-
 #   options
 set -o nounset  # avoid uninitialized variables
 set -o errexit  # exit when statement returns false
@@ -77,7 +70,7 @@ function safe_execute
         echo "${0}: ${FUNCNAME[0]} cmd_str" 1>&2
         exit 1
     fi
-    if [ -n "${SAFE_EXECUTE_VERBOSE}" ] && [ "${SAFE_EXECUTE_VERBOSE}" -ne 0 ]
+    if [ -n "${SAFE_EXECUTE_VERBOSE+xxx}" ] && [ "${SAFE_EXECUTE_VERBOSE}" -ne 0 ]
     then
         echo "${FUNCNAME[0]}: \"$@\"" 1>&2
     fi
