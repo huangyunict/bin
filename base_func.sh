@@ -1,9 +1,16 @@
 #!/bin/bash
 
+#   environment variable that may affect the behavior of safe_execute
+#   SAFE_EXECUTE_VERBOSE:   whether to display command before execute
+#   SAFE_EXECUTE_PIPEFAIL:  whether to exit on pipe failure
+
 #   options
 set -o nounset  # avoid uninitialized variables
 set -o errexit  # exit when statement returns false
 set -o pipefail # pipe fail
+
+#   pre-defined error code for signals
+export ERROR_SIGPIPE=141
 
 #   Usage:
 #       safe_let expr_str
@@ -77,7 +84,7 @@ function safe_execute
     set +o errexit
     eval "$@"
     local err_code="$?"
-    if [ "${err_code}" -ne 0 ]
+    if [ "${err_code}" -ne 0 ] && ( [ "${err_code}" -ne "${ERROR_SIGPIPE}" ] || [ "${SAFE_EXECUTE_PIPEFAIL:-0}" -ne 0 ] )
     then
         echo "${0}: failed, exit code is ${err_code}, call stack:" 1>&2
         local i
