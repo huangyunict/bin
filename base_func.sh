@@ -70,7 +70,7 @@ function safe_execute
         echo "${0}: ${FUNCNAME[0]} cmd_str" 1>&2
         exit 1
     fi
-    if [ -n "${SAFE_EXECUTE_VERBOSE+xxx}" ] && [ "${SAFE_EXECUTE_VERBOSE}" -ne 0 ]
+    if [ "${SAFE_EXECUTE_VERBOSE:-0}" -ne 0 ]
     then
         echo "${FUNCNAME[0]}: \"$@\"" 1>&2
     fi
