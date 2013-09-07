@@ -3,8 +3,15 @@
 #   environment variable that may affect the behavior of safe_execute
 #   SAFE_EXECUTE_VERBOSE:   whether to display command before execute
 #   SAFE_EXECUTE_PIPEFAIL:  whether to exit on pipe failure
-export SAFE_EXECUTE_VERBOSE=0
-export SAFE_EXECUTE_PIPEFAIL=1
+
+if ! [ -n "${SAFE_EXECUTE_VERBOSE+dummy}" ]
+then
+    export SAFE_EXECUTE_VERBOSE=0
+fi
+if ! [ -n "${SAFE_EXECUTE_PIPEFAIL+dummy}" ]
+then
+    export SAFE_EXECUTE_PIPEFAIL=1
+fi
 
 #   options
 set -o nounset  # avoid uninitialized variables
