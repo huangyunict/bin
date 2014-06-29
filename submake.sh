@@ -92,7 +92,10 @@ fi
 for i in ${all_dir}
 do
     echo "=========================== make for ${i} ===========================" 1>&2
-    safe_execute "cd ${root_dir}/${i} && make ${make_opt} && pwd && cd ${root_dir} && pwd"
+    if [ -e "${root_dir}/${i}/Makefile" ] || [ -e "${root_dir}/${i}/makefile" ]
+    then
+        safe_execute "cd ${root_dir}/${i} && make ${make_opt} && pwd && cd ${root_dir} && pwd"
+    fi
 done
 
 exit 0

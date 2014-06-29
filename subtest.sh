@@ -91,7 +91,10 @@ all_dir="$( safe_execute "${all_dir_cmd}" )"
 for i in ${all_dir}
 do
     echo "=========================== test for ${i} ===========================" 1>&2
-    safe_execute "cd ${root_dir}/${i} && ./run_test.sh && pwd && cd ${root_dir} && pwd"
+    if [ -e ${root_dir}/${i}/run_test.sh ]
+    then
+        safe_execute "cd ${root_dir}/${i} && ./run_test.sh && pwd && cd ${root_dir} && pwd"
+    fi
 done
 
 exit 0
