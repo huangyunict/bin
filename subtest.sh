@@ -16,6 +16,7 @@ program="${0}"
 verbose=0
 print_option=0
 root_dir="$(pwd)"
+exec_file="run_test.sh"
 skip_config="subtest.skip"
 make_opt=""
 
@@ -30,13 +31,14 @@ function Usage
     echo "        --help                Display this message and exit." 1>&2
     echo "        --verbose             Verbose mode." 1>&2
     echo "        --print-option        Print command line options." 1>&2
+    echo "    -e, --exec-file [F]       Set the executable file name, default \"${exec_file}\"." 1>&2
     echo "    -r, --root-dir [P]        Set root directory, default \"${root_dir}\"." 1>&2
     echo "    -s, --skip-config [F]     Set file name containing directories to skip, default \"\${root_dir}/${skip_config}\"." 1>&2
     exit 1
 }
 
 #   parse argument
-eval set -- "$(getopt -n "$0" -o "r:s:" -l "help,verbose,print-option,root-dir:,skip-config:" "--" "$@")"
+eval set -- "$(getopt -n "$0" -o "e:r:s:" -l "help,verbose,print-option,exec-file:,root-dir:,skip-config:" "--" "$@")"
 if  [ "$?" -ne 0 ]
 then
     Usage
@@ -48,6 +50,7 @@ do
        --help) Usage; shift;;
        --verbose) verbose=1; shift;;
        --print-option) print_option=1; shift;;
+    -e|--exec-file) shift; exec_file="${1}"; shift;;
     -r|--root-dir) shift; root_dir="${1}"; shift;;
     -s|--skip-config) shift; skip_config="${1}"; shift;;
     --) shift; break;;
@@ -66,6 +69,7 @@ fi
 #   print option
 if [ "${print_option}" -ne 0 ]
 then
+    echo "exec_file         : ${exec_file}" 1>&2
     echo "root_dir          : ${root_dir}" 1>&2
     echo "skip_config       : ${skip_config}" 1>&2
 fi
@@ -91,9 +95,9 @@ all_dir="$( safe_execute "${all_dir_cmd}" )"
 for i in ${all_dir}
 do
     echo "=========================== test for ${i} ===========================" 1>&2
-    if [ -e ${root_dir}/${i}/run_test.sh ]
+    if [ -e "${root_dir}/${i}/${exec_file}" ]
     then
-        safe_execute "cd ${root_dir}/${i} && ./run_test.sh && pwd && cd ${root_dir} && pwd"
+        safe_execute "cd ${root_dir}/${i} && ./${exec_file} && pwd && cd ${root_dir} && pwd"
     fi
 done
 
