@@ -319,7 +319,7 @@ function get_date_str
         __date_str="$(date +%Y%m%d%H%M%S)"
     fi
     echo "get_date_str: ${__date_str}"
-    eval ${1}="${__date_str}"
+    eval ${1}="\"${__date_str}\""
     return 0
 }
 
