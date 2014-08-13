@@ -122,27 +122,6 @@ function safe_execute
 }
 
 #   Usage:
-#       safe_mkdir dir_name
-#   Function:
-#       Make directory with all its parent directories.
-#       If the given directory already exists, do nothing.
-function safe_mkdir
-{
-    if [ "$#" -lt 1 ]
-    then
-        echo "${0}: ${FUNCNAME[0]} dir_name" 1>&2
-        exit 1
-    fi
-    local dir_name="${1}"
-    if [ -e "${dir_name}" ] && [ -d "${dir_name}" ]
-    then
-        return 0
-    fi
-    safe_execute "mkdir -p ${dir_name}"
-    return 0
-}
-
-#   Usage:
 #       safe_rm param [param]...
 #   Function:
 #       Remove given files and directories given in param.
@@ -160,9 +139,31 @@ function safe_rm
     do
         if [ -e "${f}" ] || [ -L "${f}" ]
         then
-            safe_execute "rm -rf \"${f}\""
+            safe_execute "rm -rf '${f}'"
         fi
     done
+    return 0
+}
+
+#   Usage:
+#       safe_mkdir dir_name
+#   Function:
+#       Make directory with all its parent directories.
+#       If the given directory already exists, do nothing.
+function safe_mkdir
+{
+    if [ "$#" -lt 1 ]
+    then
+        echo "${0}: ${FUNCNAME[0]} dir_name" 1>&2
+        exit 1
+    fi
+    local dir_name="${1}"
+    if [ -e "${dir_name}" ] && [ -d "${dir_name}" ]
+    then
+        return 0
+    fi
+    safe_rm "${dir_name}"
+    safe_execute "mkdir -p ${dir_name}"
     return 0
 }
 
