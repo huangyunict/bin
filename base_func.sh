@@ -168,26 +168,34 @@ function safe_mkdir
 }
 
 #   Usage:
-#       safe_ln src_path tgt_path
+#       safe_ln src_path tgt_path [hard]
 #   Function:
 #       Symbolically link file or directory.
+#       If there is third parameter [hard], create hard link instead of symbolic link.
 #       If the target object already exists, first delete it, then link.
 function safe_ln
 {
     if [ "$#" -lt 2 ]
     then
-        echo "${0}: ${FUNCNAME[0]} src_path tgt_path" 1>&2
+        echo "${0}: ${FUNCNAME[0]} src_path tgt_path [hard]" 1>&2
         exit 1
     fi
     local src_path="${1}"
     local tgt_path="${2}"
+    local hard_opt=""
+    if [ "$#" -lt 3 ]
+    then
+        hard_opt="-s"
+    else
+        hard_opt="-P"
+    fi
     if ! [ -e "${src_path}" ]
     then
         echo "${0}: safe_ln failed: source file does not exist: ${src_path}" 1>&2
         exit 1
     fi
     safe_rm "${tgt_path}"
-    safe_execute "ln -s ${src_path} ${tgt_path}"
+    safe_execute "ln ${hard_opt} ${src_path} ${tgt_path}"
     return 0
 }
 
