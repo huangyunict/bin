@@ -122,6 +122,27 @@ function safe_execute
 }
 
 #   Usage:
+#       safe_echo msg [file]
+#   Function:
+#       Append message with new line to the given file.
+function safe_echo
+{
+    if [ "$#" -lt 1 ]
+    then
+        echo "${0}: ${FUNCNAME[0]} msg [file]" 1>&2
+        exit 1
+    fi
+    local msg="${1}"
+    local file="/dev/stdout"
+    if [ "$#" -ge 2 ]
+    then
+        file="${2}"
+    fi
+    echo "${msg}" >> "${file}"
+    return 0
+}
+
+#   Usage:
 #       safe_rm param [param]...
 #   Function:
 #       Remove given files and directories given in param.
