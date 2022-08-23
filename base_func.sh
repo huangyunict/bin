@@ -310,6 +310,18 @@ function equal_line
     return 0
 }
 
+#   get absolute path
+function get_abs_path
+{
+    if [ $# -lt 1 ]
+    then
+        echo "${FUNCNAME[0]} path" 1>&2
+        exit 1
+    fi
+    echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+    return 0
+}
+
 #   get relative path
 function get_rel_path
 {
